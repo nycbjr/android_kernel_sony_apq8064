@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -240,6 +240,7 @@ void kgsl_pwrscale_busy(struct kgsl_device *device)
 		device->pwrscale.policy->busy(device,
 				&device->pwrscale);
 }
+EXPORT_SYMBOL(kgsl_pwrscale_busy);
 
 void kgsl_pwrscale_idle(struct kgsl_device *device)
 {
@@ -284,8 +285,14 @@ static void _kgsl_pwrscale_detach_policy(struct kgsl_device *device)
 {
 	if (device->pwrscale.policy != NULL) {
 		device->pwrscale.policy->close(device, &device->pwrscale);
+
+		/*
+		 * Try to set max pwrlevel which will be limited to thermal by
+		 * kgsl_pwrctrl_pwrlevel_change if thermal is indeed lower
+		 */
+
 		kgsl_pwrctrl_pwrlevel_change(device,
-				device->pwrctrl.thermal_pwrlevel);
+				device->pwrctrl.max_pwrlevel);
 	}
 	device->pwrscale.policy = NULL;
 }

@@ -1,6 +1,6 @@
 /* Copyright (c) 2012, The Linux Foundation. All rights reserved.
  * Copyright (C) 2011 Sony Ericsson Mobile Communications AB.
- * Copyright (C) 2012 Sony Mobile Communications AB.
+ * Copyright (C) 2012-2013 Sony Mobile Communications AB.
  * Copyright (C) 2011 Silicon Image Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,6 +52,8 @@ enum DevCapOffset_e {
 /* Device Category */
 #define MHL_DEV_CATEGORY_OFFSET		DEVCAP_OFFSET_DEV_CAT
 #define MHL_DEV_CATEGORY_POW_BIT	BIT(4)
+#define MHL_DEV_CATEGORY_PLIM0_BIT	BIT(5)
+#define MHL_DEV_CATEGORY_PLIM1_BIT	BIT(6)
 
 #define	MHL_DEV_CAT_SINK			0x01
 #define	MHL_DEV_CAT_SOURCE			0x02
@@ -152,16 +154,17 @@ enum {
 	MHL_MSC_MSG_RAPK			= 0x21,
 };
 
-#define MHL_RCPE_NO_ERROR			0x00
-#define MHL_RCPE_UNSUPPORTED_KEY_CODE		0x01
-#define MHL_RCPE_BUSY				0x02
+#define	RCPE_NO_ERROR				0x00
+#define	RCPE_INEEFECTIVE_KEY_CODE	0x01
+#define	MHL_RCPE_UNSUPPORTED_KEY_CODE		0x01
+#define	RCPE_BUSY					0x02
 
 #define MHL_RAPK_NO_ERROR			0x00
 #define MHL_RAPK_UNRECOGNIZED_ACTION_CODE	0x01
 #define MHL_RAPK_UNSUPPORTED_ACTION_CODE	0x02
 #define MHL_RAPK_BUSY				0x03
 
-/* MHL spec related defines */
+/* MHL spec related defines*/
 enum {
 	/* Command or Data byte acknowledge */
 	MHL_ACK					= 0x33,

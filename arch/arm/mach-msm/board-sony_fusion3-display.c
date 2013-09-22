@@ -21,7 +21,7 @@
 #include <linux/gpio.h>
 #include <linux/platform_device.h>
 #include <linux/bootmem.h>
-#include <linux/ion.h>
+#include <linux/msm_ion.h>
 #include <asm/mach-types.h>
 #include <mach/msm_memtypes.h>
 #include <mach/board.h>
@@ -233,6 +233,9 @@ static struct msm_bus_scale_pdata mdp_bus_scale_pdata = {
 static struct msm_panel_common_pdata mdp_pdata = {
 	.gpio = MDP_VSYNC_GPIO,
 	.mdp_max_clk = 266667000,
+	.mdp_max_bw = 2000000000,
+	.mdp_bw_ab_factor = 200,
+	.mdp_bw_ib_factor = 210,
 	.mdp_bus_scale_table = &mdp_bus_scale_pdata,
 	.mdp_rev = MDP_REV_44,
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
@@ -437,7 +440,7 @@ static int mipi_dsi_panel_plf_power(int on)
 								__func__, rc);
 			goto exit;
 		}
-		msleep(201);				/* Spec says > 200 ms */
+		usleep_range(25000, 26000);
 
 		rc = regulator_set_optimum_mode(reg_l2, 135000);
 		if (rc < 0) {
@@ -453,7 +456,7 @@ static int mipi_dsi_panel_plf_power(int on)
 							/* Enable VSP/VSN */
 		gpio_set_value_cansleep(lcd_dcdc_en_gpio, 1);
 		mipi_dsi_panel_plf_reset(0);		/* Reset LOW */
-		msleep(51);				/* Spec says > 50 ms */
+		usleep_range(25000, 26000);
 		mipi_dsi_panel_plf_reset(1);		/* Reset HIGH */
 		usleep_range(11000, 12000);		/* Spec says > 10 ms */
 	} else {
@@ -462,7 +465,7 @@ static int mipi_dsi_panel_plf_power(int on)
 		usleep_range(11000, 12000);		/* Spec says > 10 ms */
 							/* Disable VSP/VSN */
 		gpio_set_value_cansleep(lcd_dcdc_en_gpio, 0);
-		msleep(51);				/* Spec says > 50 ms) */
+		usleep_range(25000, 26000);
 		rc = regulator_disable(reg_l2);		/* Disable dsi-vdda */
 		if (rc)
 			pr_err("%s: disable l2 failed, rc=%d\n", __func__, rc);
@@ -511,10 +514,6 @@ static const struct panel *panels[] = {
 	&jdc_mdy70_panel_id_1a_02,
 	&jdc_mdy70_panel_id,
 #endif /* CONFIG_FB_MSM_MIPI_R63311_JDC_MDY70 */
-#ifdef CONFIG_FB_MSM_MIPI_R63311_JDC_MDY71
-	&jdc_mdy71_panel_id_1a,
-	&jdc_mdy71_panel_id,
-#endif /* CONFIG_FB_MSM_MIPI_R63311_JDC_MDY71 */
 #ifdef CONFIG_FB_MSM_MIPI_R63311_JDC_MDY80
 	&jdc_mdy80_black_panel_id,
 	&jdc_mdy80_white_panel_id,
